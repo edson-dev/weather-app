@@ -1,19 +1,11 @@
 
 import express from 'express';
 const router = express.Router();
-import authenticateToken  from '../auth/middleware';
+import authenticateJWT  from '../auth/middleware';
 const axios = require("axios");
-const redis = require("redis");
 import env from '../../config';
-let cache;
 
-(async () => {
-  cache = redis.createClient();
-
-  cache.on("error", (error) => console.error(`Error : ${error}`));
-
-  await cache.connect();
-})();
+var cache = require('express-redis-cache')();
 
 /**
  * @swagger
@@ -51,29 +43,34 @@ let cache;
  *     tags:
  *       - Weather
  */
-router.get('/:city', authenticateToken, async (req, res) => {
-    const city = req.params.city;
-
-    const cachedData = await cache.get(city);
-    if (cachedData) {
-    // If data exists in the cache, return it
-      console.log(`Cache HIT: ${city}`);
-      res.send(JSON.parse(cachedData));
-      return;
-    }else{
-      // If data does not exist in the cache, proceed to fetch it
-      console.log(`Cache MISS: ${city}`);
-      const weatherData = await fetchWeather(city);
-      res.json(weatherData);
-      cache.set(city, JSON.stringify(weatherData), 'EX', 60); // Cache for 1 hour
+router.get('/:city',authenticateJWT, cache.route({
+    expire: {
+      200: 60,
+      xxx: 1
     }
+  }), async (req, res) => {
+      const city = req.params.city;
+      const weatherData = await fetchWeather(city);
+      if (weatherData === null || weatherData === undefined) {
+         res.status(404).json({ error: 'city not found' });
+      }else{
+        res.json(weatherData);
+      }
 });
 
 async function fetchWeather(city) {
   const apiResponse = await axios.get(
     `http://api.weatherapi.com/v1/current.json?key=${env.API_KEY}&q=${city}&aqi=no`
-  );
-  console.log("Request sent to the API");
-  return await apiResponse.data;
+    ).then(response => {
+      //console.log(response.data);
+      if (response.status !== 200) {
+        return null;
+      }
+      return response.data;
+  }).catch(error => {
+      //console.log(error);
+      return null;
+  });
+return await apiResponse
 }
 export default router;
