@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser')
 
 import env  from './config';
-import e from 'express';
+import cors from 'cors';
 
 import { specs, swaggerUi } from './openapi';
 
@@ -13,6 +13,7 @@ import auth from './routes/auth/controller';
 
 const app = express();
 
+app.use(cors);
 app.use(express.json());
 app.use(bodyParser.json())
 app.use(
@@ -20,6 +21,7 @@ app.use(
     extended: true,
   })
 )
+
 // openapi docs using jsdoc notation
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 

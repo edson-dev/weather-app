@@ -2,7 +2,7 @@
 import express from 'express';
 const router = express.Router();
 import authenticateJWT  from '../auth/middleware';
-const axios = require("axios");
+import axios from 'axios';
 import env from '../../config';
 
 var cache = require('express-redis-cache')();
@@ -43,7 +43,7 @@ var cache = require('express-redis-cache')();
  *     tags:
  *       - Weather
  */
-router.get('/:city',authenticateJWT, cache?.route({
+router.get('/:city', cache?.route({
     expire: {
       200: 60,
       xxx: 1
@@ -71,6 +71,6 @@ async function fetchWeather(city) {
       //console.log(error);
       return null;
   });
-return await apiResponse
+  return await apiResponse
 }
 export default router;
