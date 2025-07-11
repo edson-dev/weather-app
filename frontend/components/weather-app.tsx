@@ -33,12 +33,12 @@ interface WeatherData {
   }[]
 }
 
-const history = new Array<WeatherData>();
+
 export default function WeatherApp() {
   const [searchQuery, setSearchQuery] = useState("")
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-
+  const [history, setHistory] = useState<WeatherData[]>([])
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -55,7 +55,7 @@ export default function WeatherApp() {
     }, []); // Empty dependency array means this effect runs once on component mount
 
 
-const handleSearch = async (query?: string, endpoint?: string= "") => {
+const handleSearch = async (query?: string, endpoint: string= "") => {
             try {
               //setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE3NTIxOTIzMTEsImV4cCI6MjA2NzU1MjMxMX0.T6zNtxeWcGsiYC9Kz5C3-rGJTsS-z0ovpDdEbv7Ubds');
                 if (query) {
@@ -70,11 +70,15 @@ const handleSearch = async (query?: string, endpoint?: string= "") => {
                     return;
                 }else {
                   setWeatherData(response.data);
-                  if (history.length >= 5) {
+                  if (history?.length >= 5) {
                     history.shift(); // Remove the oldest entry if we have 5 already
                   }
                   history.push(response.data)
-
+                  if (username && token) {
+                    const updateHistory = axios.post(`http://localhost:3000/user/${username}`, history,
+                      { headers: { Authorization: `Bearer ${token}` } });
+                    console.log(updateHistory);
+                  }
                   setError("");
                 }
             } catch (error) {
@@ -92,6 +96,7 @@ const handleSearch = async (query?: string, endpoint?: string= "") => {
                 //console.log(response.data);
                 if (response.data) {
                     setToken(response.data.token);
+                    setHistory(response.data.history || []);
                     setError("");
                 }else {
                   setToken(null);

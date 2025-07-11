@@ -34,6 +34,19 @@ const createUser = async(username, password, email) => {
   }
 };
 
+const saveUserHistory = async(username, history) => {
+  try {
+    const text = "UPDATE users SET history = $2::jsonb WHERE username = $1";
+    const values = [username, history];
+    const result = await pool.query(text, values);
+    //console.log(result);
+    return null;
+  } catch (err) {
+    console.error(err.message);
+    return err.message
+  }
+};
+
 const deleteUser = async(username) => {
   try {
     const text = "DELETE FROM users WHERE username = $1";
@@ -46,5 +59,5 @@ const deleteUser = async(username) => {
     return err.message
   }
 };
-const service = {getUser, createUser, deleteUser}
+const service = {getUser, createUser, deleteUser, saveUserHistory}
 export default service;

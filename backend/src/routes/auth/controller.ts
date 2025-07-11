@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 import env  from '../../config';
 import * as service from './service';
+import authenticateJWT from './middleware';
 
 function generateAccessToken(user) {
   return jwt.sign(user, env.SECRET, { expiresIn: 10 * 60 * 60});
@@ -57,7 +58,7 @@ router.post('/auth', async(req, res) => {
   let user = await service.default.getUser(username, password);
   if (user && user.length > 0) {
   const token = generateAccessToken({username});
-    res.json({token: token});
+    res.json({token: token, history: user[0].history});
   } else {
     res.status(401).json({ error: 'Invalid username or password' });
   }
@@ -119,6 +120,18 @@ router.post('/user', async (req, res) => {
   if (error == null || error == "") {
     res.status(201).json({ message: 'User created successfully' });
   } else {
+    res.status(400).json({ error: error });
+  }
+})
+
+router.post('/user/:name', authenticateJWT, async (req, res) => {
+  const  username  = req.params.name;
+  const body = req.body;
+  //console.log(body);
+  let error = await service.default.saveUserHistory(username, JSON.stringify(body));
+  if (error == null || error == "") {
+    res.status(200).json({ message: 'User history saved successfully' });
+  }else{
     res.status(400).json({ error: error });
   }
 })
