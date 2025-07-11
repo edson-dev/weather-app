@@ -7,9 +7,9 @@
             "test": "vitest run --silent -u",
             "coverage": "vitest run --coverage",
             "dev": "npm run build && nodemon --exec ts-node dist/main.js",
+            "start": "npm run build && nodemon --exec ts-node dist/main.js",
             "devjs": "node --env-file=.env  --experimental-strip-types --watch src/main.js",
-            "build": "tsc",
-            "start": "node dist/main.js"
+            "build": "tsc"
       },
       "keywords": [],
       "author": "",

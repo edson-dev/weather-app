@@ -43,7 +43,7 @@ var cache = require('express-redis-cache')();
  *     tags:
  *       - Weather
  */
-router.get('/:city',authenticateJWT, cache.route({
+router.get('/:city',authenticateJWT, cache?.route({
     expire: {
       200: 60,
       xxx: 1

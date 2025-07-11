@@ -14,19 +14,31 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: secret
       POSTGRES_EXTENSIONS: pg_trgm, pgsql-http
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   cache:
     image: redis:latest
     container_name: cache
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
 
   app:
     build: ./backend
+    container_name: backend
     ports:
       - "3000:3000"
     environment:
       DATABASE_URL: postgres://weather:secret@db:5432/weather
+      API_KEY: 10375491899f4a6a908174822251007
+      JWT_SECRET_KEY: yourSuperSecretKeyForJWTs
     depends_on:
       database:
         condition: service_healthy
