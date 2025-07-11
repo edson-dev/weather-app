@@ -7,7 +7,7 @@ const options = {
     info: {
       title: 'Weather Forecast API',
       version: '0.0.0',
-      description: 'API for retrieving weather forecast information',
+      description: 'API for retrieving weather forecast information with protected routes and caching.',
     },
     components: {
       securitySchemes: {

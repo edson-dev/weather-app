@@ -13,7 +13,7 @@ var cache = require('express-redis-cache')();
  *   get:
  *     security:
  *       - bearerAuth: []
- *     summary: Get weather forecast for a city
+ *     summary: get weather forecast for a city
  *     parameters:
  *       - in: path
  *         name: city

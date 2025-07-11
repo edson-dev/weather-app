@@ -124,6 +124,28 @@ router.post('/user', async (req, res) => {
   }
 })
 
+/**
+ * @swagger
+ * /user/{name}:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: update user history
+ *     parameters:
+ *       - in: path
+ *         name: name of the user
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: name of the user
+ *     responses:
+ *       200:
+ *         description: data saved successfully
+ *       400:
+ *         description: Invalid input data
+  *     tags:
+ *       - Authentication
+ */
 router.post('/user/:name', authenticateJWT, async (req, res) => {
   const  username  = req.params.name;
   const body = req.body;
