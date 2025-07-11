@@ -43,7 +43,22 @@ var cache = require('express-redis-cache')();
  *     tags:
  *       - Weather
  */
-router.get('/:city', cache?.route({
+router.get('/:city',authenticateJWT,cache?.route({
+    expire: {
+      200: 60,
+      xxx: 1
+    }
+  }), async (req, res) => {
+      const city = req.params.city;
+      const weatherData = await fetchWeather(city);
+      if (weatherData === null || weatherData === undefined) {
+         res.status(404).json({ error: 'city not found' });
+      }else{
+        res.json(weatherData);
+      }
+});
+
+router.get('/coord/:city',cache?.route({
     expire: {
       200: 60,
       xxx: 1
@@ -59,18 +74,38 @@ router.get('/:city', cache?.route({
 });
 
 async function fetchWeather(city) {
+  try{
   const apiResponse = await axios.get(
-    `http://api.weatherapi.com/v1/current.json?key=${env.API_KEY}&q=${city}&aqi=no`
-    ).then(response => {
-      //console.log(response.data);
-      if (response.status !== 200) {
-        return null;
-      }
-      return response.data;
-  }).catch(error => {
-      //console.log(error);
-      return null;
-  });
-  return await apiResponse
+    `http://api.weatherapi.com/v1/forecast.json?key=${env.API_KEY}&q=${city}&aqi=no&days=5`
+  );
+
+    let response = {
+      city: apiResponse.data.location.name,
+      region: apiResponse.data.location.region,
+      country: apiResponse.data.location.country,
+      latitude: apiResponse.data.location.lat,
+      longitude: apiResponse.data.location.lon,
+      temperatureC: apiResponse.data.current.temp_c,
+      temperatureF: apiResponse.data.current.temp_f,
+      summary: apiResponse.data.current.condition.text,
+      uvIndex: apiResponse.data.current.uv,
+      humidity: apiResponse.data.current.humidity,
+      windSpeed: apiResponse.data.current.wind_kph,
+      visibility: apiResponse.data.current.vis_km,
+      pressure: apiResponse.data.current.pressure_mb,
+      time: apiResponse.data.location.localtime,
+      forecast: apiResponse.data.forecast.forecastday.map(day => ({
+        date: day.date,
+        temperatureC: day.day.avgtemp_c,
+        temperatureF: day.day.avgtemp_f,
+        summary: day.day.condition.text
+      }))
+    }
+    response.forecast.toReversed();
+  //console.log("Request sent to the API",apiResponse.data);
+    return await response;
+  }catch(error){
+    return null
+  }
 }
 export default router;

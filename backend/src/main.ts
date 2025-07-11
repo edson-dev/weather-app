@@ -1,9 +1,12 @@
 import 'reflect-metadata';
 const express = require('express');
+import e from 'express';
+import cors from 'cors';
+
 const bodyParser = require('body-parser')
 
 import env  from './config';
-import cors from 'cors';
+
 
 import { specs, swaggerUi } from './openapi';
 
@@ -13,7 +16,8 @@ import auth from './routes/auth/controller';
 
 const app = express();
 
-app.use(cors);
+app.use(cors())
+
 app.use(express.json());
 app.use(bodyParser.json())
 app.use(

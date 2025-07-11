@@ -10,115 +10,108 @@ import axios from 'axios';
 
 interface WeatherData {
   city: string
+  region: string
   country: string
-  temperature: number
+  latitude: number
+  longitude: number
+  temperatureC: number
+  temperatureF: number
   condition: string
-  description: string
+  summary: string
   humidity: number
   windSpeed: number
   visibility: number
   pressure: number
-  feelsLike: number
   uvIndex: number
   forecast: {
-    day: string
-    high: number
-    low: number
-    condition: string
-    icon: string
+    date: string
+    summary: string
+    temperatureC: number
+    temperatureF: number
   }[]
 }
 
-// Mock weather data - in a real app, this would come from an API
-const mockWeatherData: { [key: string]: WeatherData } = {
-  "new york": {
-    city: "New York",
-    country: "United States",
-    temperature: 22,
-    condition: "Partly Cloudy",
-    description: "Partly cloudy with a chance of rain",
-    humidity: 65,
-    windSpeed: 12,
-    visibility: 10,
-    pressure: 1013,
-    feelsLike: 25,
-    uvIndex: 6,
-    forecast: [
-      { day: "Today", high: 24, low: 18, condition: "Partly Cloudy", icon: "⛅" },
-      { day: "Tomorrow", high: 26, low: 20, condition: "Sunny", icon: "☀️" },
-      { day: "Wednesday", high: 23, low: 17, condition: "Rainy", icon: "🌧️" },
-      { day: "Thursday", high: 25, low: 19, condition: "Cloudy", icon: "☁️" },
-      { day: "Friday", high: 27, low: 21, condition: "Sunny", icon: "☀️" },
-    ],
-  },
-}
-
-async function fetchWeather(city) {
-  const apiResponse = await axios.get(
-    `http://localhost:3000/weather/${city}`,
-    ).then(response => {
-      console.log(response.data);
-      if (response.status !== 200) {
-        return null;
-      }
-      return response.data;
-  }).catch(error => {
-      console.log(error);
-      return null;
-  });
-  mockWeatherData[city] = apiResponse;
-  console.log(mockWeatherData);
-  return await apiResponse
-}
-
+const history = new Array<WeatherData>();
 export default function WeatherApp() {
   const [searchQuery, setSearchQuery] = useState("")
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [token, setToken] = useState(null)
 
-  // Load default weather data on component mount
-  useEffect(() => {
-    handleSearch("new york")
-  }, [])
+    useEffect(() => {
+        const currentLocation = navigator.geolocation.getCurrentPosition((position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+          console.log(currentLocation);
+          handleSearch(`${latitude},${longitude}`, "/coord");
+        });
+    }, []); // Empty dependency array means this effect runs once on component mount
 
-  const handleSearch = async (query?: string) => {
-    const searchTerm = (query || searchQuery).toLowerCase().trim()
-    fetchWeather(searchTerm)
-    if (!searchTerm) {
-      setError("Please enter a city name")
-      return
-    }
+const handleSearch = async (query?: string, endpoint?: string= "") => {
+            try {
+              //setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE3NTIxOTIzMTEsImV4cCI6MjA2NzU1MjMxMX0.T6zNtxeWcGsiYC9Kz5C3-rGJTsS-z0ovpDdEbv7Ubds');
+                if (query) {
+                  setSearchQuery(query.toLowerCase().trim() || searchQuery);
+                }
+                setLoading(true); // Set loading to true before the request
+                const response = await axios.get(`http://localhost:3000/weather${endpoint}/${query}`, { headers: { Authorization: `Bearer ${token}` } });
+                //console.log(response.data);
+                if (!response.data) {
+                    setError("No weather data found for this city");
+                    setWeatherData(null);
+                    return;
+                }else {
+                  setWeatherData(response.data);
+                  if (history.length >= 5) {
+                    history.shift(); // Remove the oldest entry if we have 5 already
+                  }
+                  history.push(response.data);
+                  console.log(history);
+                  setError("");
+                }
+            } catch (error) {
+                console.error("Error fetching weather data:", error);
+                setWeatherData(null);
+                setError("An error occurred while fetching weather data");
+            } finally {
+                setLoading(false); // Set loading to false after the request completes (success or error)
+            }
+        };
 
-    setLoading(true)
-    setError("")
-
-    const data = mockWeatherData[searchTerm]
-    if (data) {
-      setWeatherData(data)
-    } else {
-      setError("City not found. Try 'New York', 'London', or 'Tokyo'")
-      setWeatherData(null)
-    }
-
-    setLoading(false)
-  }
+        const handleAutentication = async (query?: string) => {
+            try {
+                const response = await axios.post(`http://localhost:3000/auth`, { username: "test", password: "test" });
+                //console.log(response.data);
+                if (response.data) {
+                    setToken(response.data.token);
+                }else {
+                  setToken(null);
+                  setError("Invalid credentials");
+                }
+            } catch (error) {
+                console.error("Error fetching weather data:", error);
+                setToken(null);
+                setError("Invalid credentials");
+            }
+        };
 
   const getWeatherIcon = (condition: string) => {
-    switch (condition.toLowerCase()) {
-      case "sunny":
-        return "☀️"
-      case "partly cloudy":
-        return "⛅"
-      case "cloudy":
-        return "☁️"
-      case "rainy":
-        return "🌧️"
+    const condit = condition.toLowerCase();
+    switch (true) {
+      case condit.includes("sunny"):
+          return "☀️"
+      case condit.includes("cloudy"):
+          return "⛅"
+      case condit.includes("rainy"):
+          return "🌧️"
+      case condit.includes("partly"):
+          return "⛅"
       default:
-        return "🌤️"
+          return "🌤️"
     }
   }
-
   const getUVIndexColor = (uvIndex: number) => {
     if (uvIndex <= 2) return "bg-green-500"
     if (uvIndex <= 5) return "bg-yellow-500"
@@ -128,6 +121,7 @@ export default function WeatherApp() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 p-4">
+
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center text-white mb-8">
@@ -138,6 +132,7 @@ export default function WeatherApp() {
         {/* Search */}
         <Card className="bg-white/10 backdrop-blur-md border-white/20">
           <CardContent className="p-6">
+            {token && (
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -146,45 +141,54 @@ export default function WeatherApp() {
                   placeholder="Search for a city..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                  onKeyPress={(e) => e.key === "Enter" && handleSearch(searchQuery)}
                   className="pl-10 bg-white/20 border-white/30 text-white placeholder:text-gray-300"
                 />
               </div>
               <Button
-                onClick={() => handleSearch()}
+                onClick={() => handleSearch(searchQuery)}
                 disabled={loading}
                 className="bg-white/20 hover:bg-white/30 text-white border-white/30"
               >
                 {loading ? "Searching..." : "Search"}
               </Button>
             </div>
+            )}
+             {!token && (<div>
+            <Input type="text" placeholder="username"/>
+            <Input type="text" placeholder="password"/>
+            <Button
+                className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                onClick={() => handleAutentication()}
+              >Authentication</Button>
+          </div>)}
             {error && <p className="text-red-200 mt-2 text-sm">{error}</p>}
           </CardContent>
         </Card>
 
         {weatherData && (
-          <>
+          <div>
             {/* Current Weather */}
             <Card className="bg-white/10 backdrop-blur-md border-white/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
                   <MapPin className="h-5 w-5" />
-                  {weatherData.city}, {weatherData.country}
+                  {weatherData.latitude}, {weatherData.longitude}
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="text-center md:text-left">
                     <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
-                      <span className="text-6xl">{getWeatherIcon(weatherData.condition)}</span>
+                      <span className="text-6xl">{getWeatherIcon(weatherData.summary)}</span>
                       <div>
-                        <div className="text-5xl font-bold text-white">{weatherData.temperature}°C</div>
-                        <div className="text-blue-100">Feels like {weatherData.feelsLike}°C</div>
+                        <div className="text-5xl font-bold text-white">{weatherData.city}</div>
+                        <div className="text-blue-100">Feels like {weatherData.temperatureC}°C</div>
                       </div>
                     </div>
                     <div className="text-white">
-                      <div className="text-xl font-semibold">{weatherData.condition}</div>
-                      <div className="text-blue-100">{weatherData.description}</div>
+                      <div className="text-xl font-semibold">{weatherData.region}</div>
+                      <div className="text-blue-100">{weatherData.country}</div>
                     </div>
                   </div>
 
@@ -237,22 +241,40 @@ export default function WeatherApp() {
                 <CardTitle className="text-white">5-Day Forecast</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                   {weatherData.forecast.map((day, index) => (
                     <div key={index} className="bg-white/10 rounded-lg p-4 text-center">
-                      <div className="text-blue-100 text-sm font-medium mb-2">{day.day}</div>
-                      <div className="text-3xl mb-2">{day.icon}</div>
-                      <div className="text-white text-sm mb-1">{day.condition}</div>
+                      <div className="text-blue-100 text-sm font-medium mb-2">{day.date}</div>
+                      {/* <div className="text-3xl mb-2">{day.icon}</div> */}
+                      <div className="text-white text-sm mb-1">{getWeatherIcon(day.summary)}</div>
                       <div className="flex justify-between text-white text-sm">
-                        <span className="font-semibold">{day.high}°</span>
-                        <span className="text-blue-200">{day.low}°</span>
+                        <span className="font-semibold">{day.temperatureC}° C</span>
+                        <span className="text-blue-200">{day.temperatureF}° F</span>
                       </div>
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
-          </>
+
+            {/* Historical Search */}
+            { history.length > 0 && (
+            <Card className="bg-white/10 backdrop-blur-md border-white/20">
+              <CardHeader>
+                <CardTitle className="text-white">Historic Search</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+                  {history.map((record, index) => (
+                    <div key={index} className="bg-white/10 rounded-lg p-4 text-center">
+                      <div className="text-blue-100 text-sm font-medium mb-2">{record.city}</div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+            )}
+          </div>
         )}
       </div>
     </div>
