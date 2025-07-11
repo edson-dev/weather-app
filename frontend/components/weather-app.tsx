@@ -31,9 +31,12 @@ interface WeatherData {
   }[]
 }
 
-const history = new Array<WeatherData>();
+let history = new Array<WeatherData>();
 export default function WeatherApp() {
   const [searchQuery, setSearchQuery] = useState("")
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -48,6 +51,7 @@ export default function WeatherApp() {
           handleSearch(`${latitude},${longitude}`, "/coord");
         });
     }, []); // Empty dependency array means this effect runs once on component mount
+
 
 const handleSearch = async (query?: string, endpoint?: string= "") => {
             try {
@@ -67,8 +71,8 @@ const handleSearch = async (query?: string, endpoint?: string= "") => {
                   if (history.length >= 5) {
                     history.shift(); // Remove the oldest entry if we have 5 already
                   }
-                  history.push(response.data);
-                  console.log(history);
+                  history.push(response.data)
+
                   setError("");
                 }
             } catch (error) {
@@ -80,12 +84,13 @@ const handleSearch = async (query?: string, endpoint?: string= "") => {
             }
         };
 
-        const handleAutentication = async (query?: string) => {
+        const handleAutentication = async () => {
             try {
-                const response = await axios.post(`http://localhost:3000/auth`, { username: "test", password: "test" });
+                const response = await axios.post(`http://localhost:3000/auth`, { username: username || "test", password: password || "test" });
                 //console.log(response.data);
                 if (response.data) {
                     setToken(response.data.token);
+                    setError("");
                 }else {
                   setToken(null);
                   setError("Invalid credentials");
@@ -155,9 +160,24 @@ const handleSearch = async (query?: string, endpoint?: string= "") => {
             </div>
             )}
              {!token && (<div>
-            <Input type="text" placeholder="username" className="pl-10 bg-white/20 border-white/30 text-white placeholder:text-gray-300"/>
+            <Input
+              type="text"
+              placeholder="username"
+              onChange={(e) => setUsername(e.target.value)}
+              value={username}
+              className="pl-10 bg-white/20 border-white/30 text-white placeholder:text-gray-300"
+              />
+
             <br />
-            <Input type="text" placeholder="password" className="pl-10 bg-white/20 border-white/30 text-white placeholder:text-gray-300"/>
+
+            <Input
+            type="text"
+            placeholder="password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            className="pl-10 bg-white/20 border-white/30 text-white placeholder:text-gray-300"
+            />
+
             <br />
             <Button
                 className="bg-white/20 hover:bg-white/30 text-white border-white/30"
