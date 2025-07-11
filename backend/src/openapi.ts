@@ -1,4 +1,3 @@
-const { on } = require('events');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -19,9 +18,6 @@ const options = {
         }
       }
     },
-    security: [{
-      bearerAuth: []
-    }],
     servers: [
       {
         url: 'http://localhost:3000', // Replace with your server URL

@@ -46,5 +46,5 @@ const deleteUser = async(username) => {
     return err.message
   }
 };
-const _ = {getUser, createUser, deleteUser}
-export default _;
+const service = {getUser, createUser, deleteUser}
+export default service;

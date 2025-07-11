@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import request from 'supertest';
-import app from '../../main.js'; // Adjust the import path as necessary
+import app from '../../main.js';
 
 describe('AUTH', () => {
     it('auth should return unauthorized', async () => {

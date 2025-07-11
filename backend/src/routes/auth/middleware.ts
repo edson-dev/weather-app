@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const { error } = require('console');
 import env from '../../config';
 const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -10,7 +9,7 @@ const authenticateJWT = (req, res, next) => {
         jwt.verify(token, env.SECRET)
         next();
     } catch (err) {
-        console.error('JWT verification error:', err);
+        console.log('JWT verification error:', err);
         return res.sendStatus(403, {error:'Invalid token'});
     }
   } else {

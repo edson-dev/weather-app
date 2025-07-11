@@ -1,5 +1,7 @@
 "use client"
 
+// TODO : break this file into smaller components
+// TODO : add tests
 import { useState, useEffect } from "react"
 import { Search, MapPin, Droplets, Wind, Eye, Gauge } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -31,7 +33,7 @@ interface WeatherData {
   }[]
 }
 
-let history = new Array<WeatherData>();
+const history = new Array<WeatherData>();
 export default function WeatherApp() {
   const [searchQuery, setSearchQuery] = useState("")
   const [username, setUsername] = useState("")
