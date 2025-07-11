@@ -155,12 +155,14 @@ const handleSearch = async (query?: string, endpoint?: string= "") => {
             </div>
             )}
              {!token && (<div>
-            <Input type="text" placeholder="username"/>
-            <Input type="text" placeholder="password"/>
+            <Input type="text" placeholder="username" className="pl-10 bg-white/20 border-white/30 text-white placeholder:text-gray-300"/>
+            <br />
+            <Input type="text" placeholder="password" className="pl-10 bg-white/20 border-white/30 text-white placeholder:text-gray-300"/>
+            <br />
             <Button
                 className="bg-white/20 hover:bg-white/30 text-white border-white/30"
                 onClick={() => handleAutentication()}
-              >Authentication</Button>
+              >Login</Button>
           </div>)}
             {error && <p className="text-red-200 mt-2 text-sm">{error}</p>}
           </CardContent>
@@ -235,6 +237,7 @@ const handleSearch = async (query?: string, endpoint?: string= "") => {
               </CardContent>
             </Card>
 
+            <br />
             {/* 5-Day Forecast */}
             <Card className="bg-white/10 backdrop-blur-md border-white/20">
               <CardHeader>
@@ -256,9 +259,10 @@ const handleSearch = async (query?: string, endpoint?: string= "") => {
                 </div>
               </CardContent>
             </Card>
-
+            <br />
             {/* Historical Search */}
             { history.length > 0 && (
+            
             <Card className="bg-white/10 backdrop-blur-md border-white/20">
               <CardHeader>
                 <CardTitle className="text-white">Historic Search</CardTitle>
