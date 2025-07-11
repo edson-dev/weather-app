@@ -45,11 +45,9 @@ export default function WeatherApp() {
   const [token, setToken] = useState(null)
 
     useEffect(() => {
-        const currentLocation = navigator.geolocation.getCurrentPosition((position) => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
+        navigator.geolocation.getCurrentPosition((position) => {
+          const {latitude, longitude} = position.coords;
           console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-          console.log(currentLocation);
           handleSearch(`${latitude},${longitude}`, "/coord");
         });
     }, []); // Empty dependency array means this effect runs once on component mount
@@ -57,13 +55,11 @@ export default function WeatherApp() {
 
 const handleSearch = async (query?: string, endpoint: string= "") => {
             try {
-              //setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE3NTIxOTIzMTEsImV4cCI6MjA2NzU1MjMxMX0.T6zNtxeWcGsiYC9Kz5C3-rGJTsS-z0ovpDdEbv7Ubds');
                 if (query) {
                   setSearchQuery(query.toLowerCase().trim() || searchQuery);
                 }
-                setLoading(true); // Set loading to true before the request
+                setLoading(true);
                 const response = await axios.get(`http://localhost:3000/weather${endpoint}/${query}`, { headers: { Authorization: `Bearer ${token}` } });
-                //console.log(response.data);
                 if (!response.data) {
                     setError("No weather data found for this city");
                     setWeatherData(null);
@@ -75,9 +71,8 @@ const handleSearch = async (query?: string, endpoint: string= "") => {
                   }
                   history.push(response.data)
                   if (username && token) {
-                    const updateHistory = axios.post(`http://localhost:3000/user/${username}`, history,
+                    axios.post(`http://localhost:3000/user/${username}`, history,
                       { headers: { Authorization: `Bearer ${token}` } });
-                    console.log(updateHistory);
                   }
                   setError("");
                 }
@@ -93,7 +88,6 @@ const handleSearch = async (query?: string, endpoint: string= "") => {
         const handleAutentication = async () => {
             try {
                 const response = await axios.post(`http://localhost:3000/auth`, { username: username || "test", password: password || "test" });
-                //console.log(response.data);
                 if (response.data) {
                     setToken(response.data.token);
                     setHistory(response.data.history || []);
@@ -289,7 +283,6 @@ const handleSearch = async (query?: string, endpoint: string= "") => {
             <br />
             {/* Historical Search */}
             { history.length > 0 && (
-            
             <Card className="bg-white/10 backdrop-blur-md border-white/20">
               <CardHeader>
                 <CardTitle className="text-white">Historic Search</CardTitle>

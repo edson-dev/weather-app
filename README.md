@@ -18,7 +18,7 @@ Functional Requirements:
 [X] On the frontend, users should be able to view weather forecasts based on their location or
 search for weather in different cities.
 - Search History Storage:
-[ ] Each user can store their last 5 weather search results in the database.
+[X] Each user can store their last 5 weather search results in the database.
 [X] Display the search history on the frontend.
 - Backend with Node.js:
  [X] The backend should use Node.js with Express, and expose RESTful endpoints for authentication, weather data, and search history.
@@ -36,16 +36,8 @@ search for weather in different cities.
  [-] Write unit and integration tests for both the backend and frontend.
  -- backend
  [X] Use Jest, Mocha, or similar frameworks.
-Tips:
-- Use JWT for secure user authentication and protect endpoints.
-- Use WorkManager to handle background synchronization in React.
-- Test critical functionality such as user authentication, API calls, and data persistence.
-Evaluation Criteria:
-- Architecture and Code Quality: Proper separation of responsibilities between backend and
-frontend.
-- Best Practices: Efficient use of Node.js, React, and API integration.
-- Complete Functionality: Ensure weather data is displayed and stored correctly, with search history
-maintained.
-- Test Coverage: Write tests for backend and frontend logic.
-- Performance and Security: Effective use of caching and secure APIs.
+
+
+
+
 
