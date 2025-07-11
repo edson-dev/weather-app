@@ -1,0 +1,37 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  database:
+    image: postgres:latest
+    container_name: database
+    ports:
+      - "5432:5432"
+    volumes:
+    - ./database:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_DB: weather
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_EXTENSIONS: pg_trgm, pgsql-http
+
+  cache:
+    image: redis:latest
+    container_name: cache
+    ports:
+      - "6379:6379"
+
+  app:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://weather:secret@db:5432/weather
+    depends_on:
+      database:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+
+volumes:
+  pgdata:
