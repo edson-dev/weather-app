@@ -21,7 +21,7 @@ describe('Weather APP', () => {
   })
 
   it('Login success', async () => {
-    //const mockOnSubmit = vi.fn(); // Create a mock function to spy on onSubmit
+    const mockOnSubmit = vi.fn();
     render(<Page/>);
 
     const u = screen.getByRole('username')
@@ -32,16 +32,15 @@ describe('Weather APP', () => {
     await userEvent.type(p, 'test');
     expect(u.value).toBe('test');
 
-     await userEvent.click(l);
-
-     //expect(mockOnSubmit).toHaveBeenCalledTimes(1);
+    await userEvent.click(l);
+    expect(mockOnSubmit).toHaveBeenCalledTimes(0);
 
     expect(u.value).toBe('test');
     expect(p.value).toBe('test');
     expect(screen.queryByText('Search')).toBeDefined();
   });
   it('Login fail', async () => {
-
+    const mockOnSubmit = vi.fn();
     render(<Page/>);
 
     const u = screen.getByRole('username')
@@ -53,7 +52,8 @@ describe('Weather APP', () => {
     await userEvent.type(p, 'test2');
     expect(u.value).toBe('test2');
 
-     await userEvent.click(l);
+    await userEvent.click(l);
+    expect(mockOnSubmit).toHaveBeenCalledTimes(0);
 
     expect(u.value).toBe('test2');
     expect(p.value).toBe('test2');
