@@ -21,10 +21,10 @@ history for weather forecasts.
 docker compose up -d --no-deps  --build 'database' 'cache'
 ```
 ```sh
-cd backend && npm run dev
+cd backend && npm install && npm run dev
 ```
 ```sh
-cd frontend && npm run dev
+cd frontend && npm install && npm run dev
 ```
 
 # PROD
