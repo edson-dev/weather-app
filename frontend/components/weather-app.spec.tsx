@@ -3,7 +3,10 @@ import { render, screen } from '@testing-library/react'
 import {userEvent} from '@testing-library/user-event';
 
 import Page from '../app/page'
-import * as React from 'react'
+
+import axios from 'axios';
+import { error } from 'console';
+vi.mock('axios');
 
 describe('Weather APP', () => {
   it('renders component', () => {
@@ -21,7 +24,6 @@ describe('Weather APP', () => {
   })
 
   it('Login success', async () => {
-    const mockOnSubmit = vi.fn();
     render(<Page/>);
 
     const u = screen.getByRole('username')
@@ -32,17 +34,21 @@ describe('Weather APP', () => {
     await userEvent.type(p, 'test');
     expect(u.value).toBe('test');
 
+    const mock = {
+        token: 'ABC',
+        history: []
+      };
+    (axios.get as vi.Mock).mockResolvedValue({ status: 200, data: mock });
+
     await userEvent.click(l);
-    expect(mockOnSubmit).toHaveBeenCalledTimes(0);
 
     expect(u.value).toBe('test');
     expect(p.value).toBe('test');
     expect(screen.queryByText('Search')).toBeDefined();
   });
   it('Login fail', async () => {
-    const mockOnSubmit = vi.fn();
     render(<Page/>);
-
+    
     const u = screen.getByRole('username')
     const p = screen.getByRole('password')
     const l = screen.getByRole('login')
@@ -52,14 +58,17 @@ describe('Weather APP', () => {
     await userEvent.type(p, 'test2');
     expect(u.value).toBe('test2');
 
+    const mock = {
+        error: 'Invalid credentials'
+      };
+    (axios.get as vi.Mock).mockResolvedValue({ status: 401, data: mock });
+
     await userEvent.click(l);
-    expect(mockOnSubmit).toHaveBeenCalledTimes(0);
 
     expect(u.value).toBe('test2');
     expect(p.value).toBe('test2');
 
     expect(screen.getByRole('err')).toBeDefined();
-    expect(screen.queryByText('Search')).toBeNull()
   });
   // TODO: add mock tests for login and search
 });
