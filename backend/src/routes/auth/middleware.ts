@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 import env from '../../config';
 const authenticateJWT = (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  const authHeader:string = req.headers.authorization;
 
   if (authHeader) {
     try{

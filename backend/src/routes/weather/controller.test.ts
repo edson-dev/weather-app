@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import request from 'supertest';
 import app from '../../main'; // Adjust the import path as necessary
 
@@ -25,4 +25,4 @@ describe('WEATHER', () => {
         const res = await request(app).get('/weather/tiradentes').set('Authorization', `Bearer ${token}`);
         expect(res.statusCode).toBe(200);
     });
-});
+  });

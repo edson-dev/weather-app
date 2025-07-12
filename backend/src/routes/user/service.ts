@@ -1,6 +1,6 @@
 import {database} from '../../repository';
 
-const getUser = async (user, password)=>{
+const getUser = async (user:string, password:string)=>{
   try {
     const text = 'SELECT * FROM users WHERE username = $1 and password = MD5($2)';
     const values = [user, password];
@@ -12,7 +12,7 @@ const getUser = async (user, password)=>{
   }
 };
 
-const createUser = async(username, password, email) => {
+const createUser = async(username:string, password:string, email:string) => {
   try {
     const text = "INSERT INTO users (username, password, email, created_at) values ($1, MD5($2), $3, NOW())";
     const values = [username, password, email];
@@ -25,7 +25,7 @@ const createUser = async(username, password, email) => {
   }
 };
 
-const saveUserHistory = async(username, history) => {
+const saveUserHistory = async(username:string, history:string) => {
   try {
     const text = "UPDATE users SET history = $2::jsonb WHERE username = $1";
     const values = [username, history];
@@ -38,7 +38,7 @@ const saveUserHistory = async(username, history) => {
   }
 };
 
-const deleteUser = async(username) => {
+const deleteUser = async(username:string) => {
   try {
     const text = "DELETE FROM users WHERE username = $1";
     const values = [username];
