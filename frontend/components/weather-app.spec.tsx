@@ -5,7 +5,7 @@ import {userEvent} from '@testing-library/user-event';
 import Page from '../app/page'
 
 import axios from 'axios';
-import { error } from 'console';
+
 vi.mock('axios');
 
 describe('Weather APP', () => {
