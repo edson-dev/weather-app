@@ -101,6 +101,8 @@ router.put('/:username',authenticateJWT, async (req, res) => {
  * @swagger
  * /user/{name}:
  *   delete:
+ *     security:
+ *       - bearerAuth: []
  *     summary: delete user
  *     params:
  *       - name: user
