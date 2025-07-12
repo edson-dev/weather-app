@@ -188,10 +188,11 @@ return (
           <Button
               className="bg-white/20 hover:bg-white/30 text-white border-white/30"
               name="login"
+              role="login"
               onClick={() => handleAutentication()}
             >Login</Button>
         </div>)}
-          {error && <p className="text-red-200 mt-2 text-sm">{error}</p>}
+          {error && <p role="err" className="text-red-200 mt-2 text-sm">{error}</p>}
         </CardContent>
       </Card>
 
