@@ -33,3 +33,11 @@ cd frontend && npm run dev
 docker compose up -d --no-deps  --build
 ```
 
+# DEMO
+![swagger ui](/docs/swagger.png)
+
+![login](/docs/login.png)
+
+![search](/docs/search.png)
+
+![backend](/docs/backend.cov.png) ![frontend](/docs/frontend.cov.png)

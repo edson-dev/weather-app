@@ -5,8 +5,8 @@ import app from '../../main.js';
 let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE3NTIxOTIzMTEsImV4cCI6MjA2NzU1MjMxMX0.T6zNtxeWcGsiYC9Kz5C3-rGJTsS-z0ovpDdEbv7Ubds';
 
 describe.sequential('AUTH', () => {
-    it('auth should return unauthorized', async () => {
-        
+    it('AUTH should return unauthorized', async () => {
+
         const del = await request(app).delete('/user/test')
         .set('Authorization', `Bearer ${token}`);
         const payload = {
