@@ -11,6 +11,7 @@ import { specs, swaggerUi } from './openapi';
 
 import weather from './routes/weather/controller';
 import auth from './routes/auth/controller';
+import user from './routes/user/controller';
 
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 //routes
 app.use('/', auth);
 app.use('/weather', weather);
+app.use('/user', user);
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen( env.PORT, () => {

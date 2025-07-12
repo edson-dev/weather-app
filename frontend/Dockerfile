@@ -8,6 +8,6 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 # Expose the application port
-EXPOSE 3000
+EXPOSE 8080
 # Command to run node.js in a docker container
 CMD ["npm", "start"]

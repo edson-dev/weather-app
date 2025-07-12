@@ -4,8 +4,7 @@ const router = express.Router();
 import authenticateJWT  from '../auth/middleware';
 import axios from 'axios';
 import env from '../../config';
-
-var cache = require('express-redis-cache')();
+import {cache} from '../../repository';
 
 /**
  * @swagger
@@ -60,7 +59,7 @@ router.get('/:city',authenticateJWT,cache?.route({
 
 router.get('/coord/:city',cache?.route({
     expire: {
-      200: 60,
+      200: 60 * 60 * 24, // 1 day
       xxx: 1
     }
   }), async (req, res) => {

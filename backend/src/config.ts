@@ -5,7 +5,9 @@ const env = {
   PORT: process.env.PORT || 3000,
   SECRET: process.env.JWT_SECRET_KEY,
   POSTGRES_URL: process.env.POSTGRES_URL || "postgres://username:password@host:port/database",
-  API_KEY: process.env.API_KEY
+  API_KEY: process.env.API_KEY,
+  REDIS_URL: process.env.REDIS_URL || "localhost",
+  REDIS_PORT: process.env.REDIS_PORT || 6379,
 }
 
 export default env;

@@ -6,6 +6,7 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     isolate: true,
+    fileParallelism: false,
   },
   plugins: [tsconfigPaths()]
 });
