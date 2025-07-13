@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, Mock  } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import {userEvent} from '@testing-library/user-event';
 
@@ -38,7 +38,7 @@ describe('Weather APP', () => {
         token: 'ABC',
         history: [{city: 'Test City'}]
       };
-    (axios.get as vi.Mock).mockResolvedValue({ status: 200, data: mock });
+    (axios.get as Mock).mockResolvedValue({ status: 200, data: mock });
 
     await userEvent.click(l);
 
@@ -61,7 +61,7 @@ describe('Weather APP', () => {
     const mock = {
         error: 'Invalid credentials'
       };
-    (axios.get as vi.Mock).mockResolvedValue({ status: 401, data: mock });
+    (axios.get as Mock).mockResolvedValue({ status: 401, data: mock });
 
     await userEvent.click(l);
 

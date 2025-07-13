@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 import env  from '../../config';
-import * as userService from '../user/service';
+import * as userService from '../user/repository';
 
 function generateAccessToken(user) {
   return jwt.sign(user, env.SECRET, { expiresIn: 10 * 60 * 60});

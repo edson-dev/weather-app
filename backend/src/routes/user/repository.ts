@@ -1,4 +1,4 @@
-import {database} from '../../repository';
+import {database} from '../../databases';
 
 const getUser = async (user:string, password:string)=>{
   try {

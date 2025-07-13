@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import * as service from './service';
+import * as service from './repository';
 import authenticateJWT from '../auth/middleware';
 
 /**

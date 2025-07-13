@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-import e from 'cors';
+
 import env  from './config';
 
 const database = new Pool({

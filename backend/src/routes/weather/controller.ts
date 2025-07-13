@@ -3,7 +3,7 @@ import express from 'express';
 const router = express.Router();
 import authenticateJWT  from '../auth/middleware';
 
-import {cache} from '../../repository';
+import {cache} from '../../databases';
 import fetchWeather from './service';
 
 /**

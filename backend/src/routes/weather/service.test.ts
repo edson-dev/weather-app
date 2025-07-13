@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, Mock } from 'vitest';
 
 import fetchWeather from './service'; // Adjust the import path as necessary
 import axios from 'axios';
@@ -8,7 +8,7 @@ describe('WEATHER', () => {
             //d
             const mock = [{ city: 'Test City'}];
             // Mock the axios.get method to resolve with our mock data
-            (axios.get as vi.Mock).mockResolvedValue({ data: mock });
+            (axios.get as Mock).mockResolvedValue({ data: mock });
 
             const res = await fetchWeather('test-city'); // Call the function you want to test
 
@@ -41,7 +41,7 @@ describe('WEATHER', () => {
                 forecast: {forecastday: []}
             };
             // Mock the axios.get method to resolve with our mock data
-            (axios.get as vi.Mock).mockResolvedValue({ data: mock });
+            (axios.get as Mock).mockResolvedValue({ data: mock });
 
             const res = await fetchWeather('test-city'); // Call the function you want to test
 
