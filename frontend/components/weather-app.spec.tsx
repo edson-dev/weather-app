@@ -36,7 +36,7 @@ describe('Weather APP', () => {
 
     const mock = {
         token: 'ABC',
-        history: []
+        history: [{city: 'Test City'}]
       };
     (axios.get as vi.Mock).mockResolvedValue({ status: 200, data: mock });
 
