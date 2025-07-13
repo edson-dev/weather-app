@@ -1,9 +1,9 @@
 
 import express from 'express';
 const router = express.Router();
-import authenticateJWT  from '../auth/middleware';
+import authenticateJWT from '../auth/middleware';
 
-import {cache} from '../../databases';
+import { cache } from '../../databases';
 import fetchWeather from './service';
 
 /**
@@ -42,34 +42,34 @@ import fetchWeather from './service';
  *     tags:
  *       - Weather
  */
-router.get('/:city',authenticateJWT,cache?.route({
+router.get('/:city', authenticateJWT, cache?.route({
     expire: {
-      200: 60,
-      xxx: 1
+        200: 60,
+        xxx: 1
     }
-  }), async (req, res) => {
-      const city = req.params.city;
-      const weatherData = await fetchWeather(city);
-      if (weatherData === null || weatherData === undefined) {
-         res.status(404).json({ error: 'city not found' });
-      }else{
+}), async (req, res) => {
+    const city = req.params.city;
+    const weatherData = await fetchWeather(city);
+    if (weatherData === null || weatherData === undefined) {
+        res.status(404).json({ error: 'city not found' });
+    } else {
         res.json(weatherData);
-      }
+    }
 });
 
-router.get('/coord/:city',cache?.route({
+router.get('/coord/:city', cache?.route({
     expire: {
-      200: 60 * 60 * 24, // 1 day
-      xxx: 1
+        200: 60 * 60 * 24, // 1 day
+        xxx: 1
     }
-  }), async (req, res) => {
-      const city = req.params.city;
-      const weatherData = await fetchWeather(city);
-      if (weatherData === null || weatherData === undefined) {
-         res.status(404).json({ error: 'city not found' });
-      }else{
+}), async (req, res) => {
+    const city = req.params.city;
+    const weatherData = await fetchWeather(city);
+    if (weatherData === null || weatherData === undefined) {
+        res.status(404).json({ error: 'city not found' });
+    } else {
         res.json(weatherData);
-      }
+    }
 });
 
 

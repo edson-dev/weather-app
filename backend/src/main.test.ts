@@ -7,4 +7,9 @@ describe('Routes', () => {
         const res = await request(app).get('/');
         expect(res.statusCode).toBe(404);
     });
+
+    it('HEALTH / should return success', async () => {
+        const res = await request(app).get('/health');
+        expect(res.statusCode).toBe(200);
+    });
 });

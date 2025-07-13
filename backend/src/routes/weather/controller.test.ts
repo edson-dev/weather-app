@@ -25,4 +25,4 @@ describe('WEATHER', () => {
         const res = await request(app).get('/weather/tiradentes').set('Authorization', `Bearer ${token}`);
         expect(res.statusCode).toBe(200);
     });
-  });
+});

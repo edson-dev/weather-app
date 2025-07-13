@@ -1,11 +1,11 @@
 import express from 'express';
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-import env  from '../../config';
+import env from '../../config';
 import * as userService from '../user/repository';
 
 function generateAccessToken(user) {
-  return jwt.sign(user, env.SECRET, { expiresIn: 10 * 60 * 60});
+    return jwt.sign(user, env.SECRET, { expiresIn: 10 * 60 * 60 });
 }
 
 /**
@@ -52,15 +52,15 @@ function generateAccessToken(user) {
   *     tags:
  *       - Authentication
  */
-router.post('/auth', async(req, res) => {
-  const { username, password } = req.body;
-  let user = await userService.default.getUser(username, password);
-  if (user && user.length > 0) {
-  const token = generateAccessToken({username});
-    res.json({token: token, history: user[0].history});
-  } else {
-    res.status(401).json({ error: 'Invalid username or password' });
-  }
+router.post('/', async (req, res) => {
+    const { username, password } = req.body;
+    let user = await userService.default.getUser(username, password);
+    if (user && user.length > 0) {
+        const token = generateAccessToken({ username });
+        res.json({ token: token, history: user[0].history });
+    } else {
+        res.status(401).json({ error: 'Invalid username or password' });
+    }
 });
 
 export default router;

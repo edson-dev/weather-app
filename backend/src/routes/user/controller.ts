@@ -54,13 +54,13 @@ import authenticateJWT from '../auth/middleware';
  *       - User
  */
 router.post('/', async (req, res) => {
-  const { username, password, email } = req.body;
-  let error = await service.default.createUser(username, password,email);
-  if (error == null || error == "") {
-    res.status(201).json({ message: 'User created successfully' });
-  } else {
-    res.status(400).json({ error: error });
-  }
+    const { username, password, email } = req.body;
+    let error = await service.default.createUser(username, password, email);
+    if (error == null || error == "") {
+        res.status(201).json({ message: 'User created successfully' });
+    } else {
+        res.status(400).json({ error: error });
+    }
 })
 
 /**
@@ -85,16 +85,16 @@ router.post('/', async (req, res) => {
   *     tags:
  *       - User
  */
-router.put('/:username',authenticateJWT, async (req, res) => {
-  const  username  = req.params.username;
-  const body = req.body;
-  //console.log(body);
-  let error = await service.default.saveUserHistory(username, JSON.stringify(body));
-  if (error == null || error == "") {
-    res.status(200).json({ message: 'User history saved successfully' });
-  }else{
-    res.status(400).json({ error: error });
-  }
+router.put('/:username', authenticateJWT, async (req, res) => {
+    const username = req.params.username;
+    const body = req.body;
+    //console.log(body);
+    let error = await service.default.saveUserHistory(username, JSON.stringify(body));
+    if (error == null || error == "") {
+        res.status(200).json({ message: 'User history saved successfully' });
+    } else {
+        res.status(400).json({ error: error });
+    }
 })
 
 /**
@@ -128,13 +128,13 @@ router.put('/:username',authenticateJWT, async (req, res) => {
   *     tags:
  *       - User
  */
-router.delete('/:username',authenticateJWT, async (req, res) => {
-  const  username  = req.params.username;
-  let error = await service.default.deleteUser(username);
-  if (error == null || error == "") {
-    res.status(200).json({ message: 'User deleted successfully' });
-  } else {
-    res.status(400).json({ error: error });
-  }
+router.delete('/:username', authenticateJWT, async (req, res) => {
+    const username = req.params.username;
+    let error = await service.default.deleteUser(username);
+    if (error == null || error == "") {
+        res.status(200).json({ message: 'User deleted successfully' });
+    } else {
+        res.status(400).json({ error: error });
+    }
 })
 export default router;

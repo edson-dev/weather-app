@@ -9,25 +9,25 @@ describe('USER', () => {
 
     it('USER should return success at first created', async () => {
         const payload = {
-        username: 'test2',
-        password: 'test2',
-        email: 'test@test.com'
-    }
-    const del = await request(app).delete('/user/test2')
-    .set('Authorization', `Bearer ${token}`);
-    const res = await request(app).post('/user')
-    .set('Content-Type', 'application/json').send(payload);
-    expect(res.statusCode).toBe(201);
+            username: 'test2',
+            password: 'test2',
+            email: 'test@test.com'
+        }
+        const del = await request(app).delete('/user/test2')
+            .set('Authorization', `Bearer ${token}`);
+        const res = await request(app).post('/user')
+            .set('Content-Type', 'application/json').send(payload);
+        expect(res.statusCode).toBe(201);
     });
 
     it('USER should return fail as second created with error body about username exists', async () => {
         const payload = {
-        username: 'test2',
-        password: 'test2',
-        email: 'test@test.com'
-    }
-    const res = await request(app).post('/user').set('Content-Type', 'application/json').send(payload);
-    expect(res.statusCode).toBe(400);
+            username: 'test2',
+            password: 'test2',
+            email: 'test@test.com'
+        }
+        const res = await request(app).post('/user').set('Content-Type', 'application/json').send(payload);
+        expect(res.statusCode).toBe(400);
     });
 
     it('USER update should return success', async () => {
@@ -36,8 +36,8 @@ describe('USER', () => {
             password: 'test2'
         }
         const res = await request(app).put('/user/test2')
-        .set('Authorization', `Bearer ${token}`)
-        .send(payload);
+            .set('Authorization', `Bearer ${token}`)
+            .send(payload);
         //expect(res.body.error).equal('User created successfully');
         expect(res.statusCode).toBe(200);
     });
