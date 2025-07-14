@@ -23,7 +23,7 @@ describe('Weather APP', () => {
         expect(screen.queryByText('Search')).toBeNull()
     })
 
-    it('Login success', async () => {
+    it('Login success and search city', async () => {
         render(<Page />);
 
         const u = screen.getByRole('username')
@@ -38,13 +38,19 @@ describe('Weather APP', () => {
             token: 'ABC',
             history: [{ city: 'Test City' }]
         };
-        (axios.post as Mock).mockResolvedValue({ status: 200, data: mock });
+        (axios.post as Mock).mockResolvedValueOnce({ status: 200, data: mock });
 
         await userEvent.click(l);
 
         expect(u.value).toBe('test');
         expect(p.value).toBe('test');
-        expect(screen.getByRole(('search'))).toBeDefined();
+        const s = screen.getByRole('search');
+        const sb = screen.getByRole('search_button');
+        expect(s).toBeDefined();
+        await userEvent.type(s, 'test');
+        (axios.get as Mock).mockResolvedValueOnce({ status: 200, data: {city: 'Test City', forecast:  [] } });
+        await userEvent.click(sb);
+        expect(screen.findAllByText('Test City')).toBeDefined();
     });
     it('Login fail', async () => {
         render(<Page />);
@@ -71,5 +77,4 @@ describe('Weather APP', () => {
         expect(e).toBeDefined();
         expect(e.textContent).toBe('Invalid credentials');
     });
-    // TODO: add mock tests for login and search
 });

@@ -104,6 +104,8 @@ export default function WeatherApp() {
     };
 
     const getWeatherIcon = (condition: string) => {
+        if (!condition)
+            return "🌤️"
         const condit = condition.toLowerCase();
         switch (true) {
             case condit.includes("sunny"):
@@ -155,6 +157,7 @@ export default function WeatherApp() {
                                 <Button
                                     onClick={() => handleSearch(searchQuery)}
                                     disabled={loading}
+                                    role="search_button"
                                     className="bg-white/20 hover:bg-white/30 text-white border-white/30"
                                 >
                                     {loading ? "Searching..." : "Search"}
