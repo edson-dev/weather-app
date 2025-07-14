@@ -61,14 +61,15 @@ describe('Weather APP', () => {
         const mock = {
             error: 'Invalid credentials'
         };
-        (axios.get as Mock).mockResolvedValue({ status: 401, data: mock });
+        (axios.get as Mock).mockResolvedValueOnce({ status: 401, data: mock });
 
         await userEvent.click(l);
 
         expect(u.value).toBe('test2');
         expect(p.value).toBe('test2');
-
-        expect(screen.getByRole('err')).toBeDefined();
+        const e = screen.getByRole('err');
+        expect(e).toBeDefined();
+        expect(e.textContent).toBe('Invalid credentials');
     });
     // TODO: add mock tests for login and search
 });
