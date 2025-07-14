@@ -38,13 +38,13 @@ describe('Weather APP', () => {
             token: 'ABC',
             history: [{ city: 'Test City' }]
         };
-        (axios.get as Mock).mockResolvedValue({ status: 200, data: mock });
+        (axios.post as Mock).mockResolvedValue({ status: 200, data: mock });
 
         await userEvent.click(l);
 
         expect(u.value).toBe('test');
         expect(p.value).toBe('test');
-        expect(screen.queryByText('Search')).toBeDefined();
+        expect(screen.getByRole(('search'))).toBeDefined();
     });
     it('Login fail', async () => {
         render(<Page />);
