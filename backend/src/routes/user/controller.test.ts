@@ -38,7 +38,6 @@ describe('USER', () => {
         const res = await request(app).put('/user/test2')
             .set('Authorization', `Bearer ${token}`)
             .send(payload);
-        //expect(res.body.error).equal('User created successfully');
         expect(res.statusCode).toBe(200);
     });
 

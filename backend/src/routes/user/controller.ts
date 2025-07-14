@@ -88,7 +88,6 @@ router.post('/', async (req, res) => {
 router.put('/:username', authenticateJWT, async (req, res) => {
     const username = req.params.username;
     const body = req.body;
-    //console.log(body);
     let error = await service.default.saveUserHistory(username, JSON.stringify(body));
     if (error == null || error == "") {
         res.status(200).json({ message: 'User history saved successfully' });

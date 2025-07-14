@@ -1,19 +1,15 @@
 import { describe, it, expect, vi, Mock } from 'vitest';
 
-import fetchWeather from './service'; // Adjust the import path as necessary
+import fetchWeather from './service';
 import axios from 'axios';
 vi.mock('axios');
 describe('WEATHER', () => {
     it('fetch api data invalid data', async () => {
-        //d
         const mock = [{ city: 'Test City' }];
-        // Mock the axios.get method to resolve with our mock data
         (axios.get as Mock).mockResolvedValue({ data: mock });
 
-        const res = await fetchWeather('test-city'); // Call the function you want to test
+        const res = await fetchWeather('test-city');
 
-        // Assert that axios.get was called with the correct URL
-        // Assert that the function returned the mocked data
         expect(res).toEqual(null);
     });
     it('fetch api data valid data', async () => {
@@ -40,13 +36,10 @@ describe('WEATHER', () => {
             },
             forecast: { forecastday: [] }
         };
-        // Mock the axios.get method to resolve with our mock data
         (axios.get as Mock).mockResolvedValue({ data: mock });
 
-        const res = await fetchWeather('test-city'); // Call the function you want to test
+        const res = await fetchWeather('test-city');
 
-        // Assert that axios.get was called with the correct URL
-        // Assert that the function returned the mocked data
         expect(res).not.toBeNull();
     });
 });
