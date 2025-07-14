@@ -36,7 +36,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgres://weather:secret@db:5432/weather
+      POSTGRES_URL: postgres://postgres:secret@database:5432/weather
       API_KEY: 10375491899f4a6a908174822251007
       JWT_SECRET_KEY: yourSuperSecretKeyForJWTs
       REDIS_URL: cache
