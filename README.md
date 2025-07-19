@@ -29,7 +29,7 @@ cd frontend && npm install && npm run dev
 
 # PROD
 
-```PRD NEED FIX routes and BD connections
+```PRD
 docker compose up -d --no-deps  --build
 ```
 

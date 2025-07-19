@@ -78,6 +78,7 @@ export default function WeatherApp() {
             }
         } catch (error) {
             console.error("Error fetching weather data:", error);
+            setToken(null);
             setWeatherData(null);
             setError("An error occurred while fetching weather data");
         } finally {
